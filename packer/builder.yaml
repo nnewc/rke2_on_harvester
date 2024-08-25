@@ -7,7 +7,6 @@ metadata:
     vm.kubevirt.io/name: builder
   name: builder-pod
   namespace: default
-  
 spec:
   initContainers:
     - command: ["bash", "-c"]
@@ -81,7 +80,6 @@ spec:
       - name: results
         mountPath: /results
   hostname: builder
-  nodeName: fulcrum1
   nodeSelector:
     kubevirt.io/schedulable: 'true'
   restartPolicy: Never
