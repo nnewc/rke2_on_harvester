@@ -9,10 +9,10 @@ metadata:
     helm.sh/hook-delete-policy: before-hook-creation
 spec:
   ranges:
-    - gateway: 10.10.0.1
-      rangeEnd: 10.10.0.5
-      rangeStart: 10.10.0.5
-      subnet: 10.10.0.0/24
+    - gateway: 192.168.61.1
+      rangeEnd: 192.168.61.5
+      rangeStart: 192.168.61.5
+      subnet: 192.168.61.0/24
   selector: {}
 ---
 apiVersion: loadbalancer.harvesterhci.io/v1beta1

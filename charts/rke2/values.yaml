@@ -5,13 +5,14 @@ shared_token: insecuretoken
 system_default_registry: ""       #! empty value: use embedded default
                                   #! non-empty value: use as regsitry to source rke2 runtime image from
                                   #! if your VM image contains the tarballs for RKE2, it will use those first
-rke2_version: v1.26.10+rke2r2
+rke2_version: v1.30.3+rke2r1
 
-ssh_pub_key: ""                   #! the public ssh key to inject onto each node, required if you want to fetch a kubeconfig
+ssh_pub_key: |
+  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDoITw/rO25GOJqcjziveizqQGdAhWDkpjmv+2P2XEhtYoFgQ5YBtUNXHA24HD/SWWiY27FQl5i9IYtz+pwglxwYqJCl4SmUlOqZLLMhnr0YMSq05vLN0WcvKkKDO6TDpsXHsTkge+89dQMdkdzOXdxvtmijWj2lG8yfuW7Uuy7Bn21OY4M2ZFJDQHv+imS2BrhCPlVkJiQjgNIlDhu7iizIzqV3wiB2kcR0B7tYNEaL4FaJGxWN9H2efwteiCaHBhOu+GetTyqY4KL/G0AoyadnTxeBZgQVjQlSvbIYOgTN+cAp5zKP0UoYbZ7o/eId3X8z4cZYzw3OenaxP8y5fH5SIkwo1YBcq5CWMqYQrZtWPU60SpuGQVUw8GtjbUm45CXsbQUFOhfMy2vWTsxPLvkZu9uVevRvJt3ZPu1iacFK1kx3QlVQESjp3h4nyu4ypRvfNGafaBfdv516L3LStZCt40PvY2iEx38SzUKPik3sLSti71J9i04UAeFEjZt7HGqihjetQ3yiOY8QioTopYXhAlUDsEsDTWwecysWXVgmlWPbx0aNi1vS6NkQ/RE6PHzWldMV4s9VARs3YZAreAzMAWhO9DKx6WyrQh6kv5C8K1cPnnu/BkG8rsAcXtZ/KwX9pxyiupJRK+SK1iwKD+w1hdQtg1cjL9gRkAVuHNMLw== newcomb.nathan@gmail.com
 
 vm:
   image_namespace: default        #! namespace in your harvester cluster containing the vm base image
-  image: ubuntu                   #! name of base vm image to use for your RKE2 nodes
+  image: ubuntu-rke2              #! name of base vm image to use for your RKE2 nodes
   os: linux
   distro: ubuntu                  #! flag used for specific cloud-init code tied to Ubuntu vs others (netplan)
   uefi_enabled: true
@@ -19,7 +20,7 @@ vm:
   qemu_agent_enable: true         #! flag for enabling the qemu-agent
   airgapped_image: false          #! flag to alert helm that your VM image already has the RKE2 install script (and does not need to download it)
 
-network_name: host
+network_name: vm-net
 
 control_plane:
   node_count: 1
@@ -27,17 +28,17 @@ control_plane:
   memory_gb: 8
   node_disk_gb: 40
 
-  vip:                            #! this is the VIP for the Harvester LoadBalancer object, ensure it is a routable IP
+  vip:  192.168.61.5              #! this is the VIP for the Harvester LoadBalancer object, ensure it is a routable IP
   ipam: dhcp                      #! this can be dhcp or static, static requires the static ip fields
-  static_ip:
-    device: enp1s0                #! network device name on your VMs, may differ depending on host OS
-    gateway: 10.10.0.1
-    dns:
-    - 10.10.0.1
-    pool:                         #! this is an available IP pool to be used for control-plane nodes when they are deployed, they are deterministic
-    - 10.10.0.6/24
-    - 10.10.0.7/24
-    - 10.10.0.8/24
+  # static_ip:
+  #   device: enp1s0                #! network device name on your VMs, may differ depending on host OS
+  #   gateway: 192.168.60.1
+  #   dns:
+  #   - 192.168.60.1
+  #   pool:                         #! this is an available IP pool to be used for control-plane nodes when they are deployed, they are deterministic
+  #   - 10.10.0.6/24
+  #   - 10.10.0.7/24
+  #   - 10.10.0.8/24
 
 worker:
   node_count: 1
