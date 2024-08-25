@@ -1,4 +1,5 @@
 # Packer builder for Harvester
+
 Use Harvester to run a qemu instance container to build a custom VM. Right now its a Pod but I'll convert it to a Job in the future.
 
 For those not aware, Packer is a tool by [Hashicorp](https://www.packer.io/) used to build Virtual Machine images programmatically. What usually ends up as a manual process with an error-prone checklist that an operator follows to create an approved VM image can be translated into pure code. Yes, this includes interacting with UI elements. Packer can build VM images starting with official release installation ISOs that you might see from Canonical or Rocky and generate a variety of formats of VM images (including moving them around and publishing them). This also includes CSPs such as AWS and Azure.
@@ -7,13 +8,14 @@ Ensure your kubecontext is pointed at your Harvester cluster. Most of the config
 
 Edit your [recipe.yaml](./recipe.yaml) file to suit your custom VM image (its a cloud-init). Default passwords and such do not persist.
 
+## Howto
 
-# Howto
+### Building the Image
 
-## Building the Image
 I have greatly simplified how this works. It is no longer spinning up a base VM to run packer within (to spin up yet another VM) but is instead using a Harvester container image that has KVM support built in.
 
 Run the build script:
+
 ```bash
 ./build.sh
 ```
@@ -92,13 +94,15 @@ Image located here: ubuntu-jammy-rke2-amd64.img
 
 Ensure your image copied successfully, it would be `ubuntu-jammy-rke2-amd64.img` in the above example. If you need more logs, add PACKER_LOG to the packer commands in [builder.yaml](./builder.yaml)
 
-## Deploying the Image
+### Deploying the Image
+
 Use the [upload.sh](./upload.sh) script to deploy the image to Harvester. You will need to supply environment variables to run this script. Note that this script can be incorporated into a post-install step in Packer but I chose to keep it external on purpose to avoid crossing scope boundaries and highlight the steps occuring in this process.
 
 * HARVESTER_VIP = your Harvester's Virtual IP (VIP)
 * HARVESTER_PASSWORD = your Harvester's admin-user password
 
 Usage is very simple from the command-line:
+
 ```bash
 HARVESTER_VIP=10.10.0.10 HARVESTER_PASSWORD=mypassword ./upload.sh
 ```
@@ -116,9 +120,9 @@ Verify your image is in Harvester via the UI:
 
 ![image](../images/vmi_deployed.png)
 
-# Conclusion
+## Conclusion
 
-You've now built a VM image programmatically instead of manual point and clicking! This opens up a whole world of automation and security enhancements (think of how powerful attestation reports can be here for your compliance/assurance needs). Packer can do all sorts of cool things (checksum generation for example), I encourage you to explore the tool! 
+You've now built a VM image programmatically instead of manual point and clicking! This opens up a whole world of automation and security enhancements (think of how powerful attestation reports can be here for your compliance/assurance needs). Packer can do all sorts of cool things (checksum generation for example), I encourage you to explore the tool!
 
 If you need to add more to your custom VM image, you don't even need to use tools like Ansible here, just update the [recipe.yaml](./recipe.yaml) and build again! Cloud Init allows for a huge amount of customization prior to ever consuming the actual VM image in your production workstreams.
 

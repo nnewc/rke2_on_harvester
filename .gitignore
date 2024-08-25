@@ -1,0 +1,6 @@
+*.log
+*.tgz
+*.img
+
+local.yaml
+.vscode/settings.json
