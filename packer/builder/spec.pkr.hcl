@@ -33,7 +33,7 @@ source "qemu" "ubuntu_cloud" {
   ssh_password    = "superpassword"
   ssh_username    = "ubuntu"
   ssh_timeout     = "5m"
-  shutdown_command = "sudo cloud-init clean --logs --machine-id && sudo shutdown -P now"
+  shutdown_command = "sudo cloud-init clean --logs --machine-id --configs all && sudo shutdown -P now"
   headless        = true 
 
   net_device        = "virtio-net"
