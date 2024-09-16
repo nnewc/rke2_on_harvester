@@ -10,7 +10,7 @@ export NAMESPACE=default
 echo "Acquiring API Token"
 export TOKEN=$(curl -sk -X POST https://${HARVESTER_VIP}/v3-public/localProviders/local?action=login -H 'content-type: application/json' -d '{"username":"admin","password":"'${HARVESTER_PASSWORD}'"}' | jq -r '.token')
 
-export IMAGE_SIZE=$(stat -c%s "$IMAGE_FILE")
+export IMAGE_SIZE=$(stat -f%z "$IMAGE_FILE")
 echo "Creating VM Image object"
 cat templates/vmi.yaml | envsubst | \
 curl -sk -X POST -H "Authorization: Bearer ${TOKEN}" \
