@@ -73,3 +73,51 @@ spec:
       affinity: {}
       terminationGracePeriodSeconds: 120
 {{- end }}
+---
+apiVersion: loadbalancer.harvesterhci.io/v1beta1
+kind: IPPool
+metadata:
+  name: {{ $.Values.cluster_name }}-pool
+  namespace: {{ $.Release.Namespace }}
+spec:
+  ranges:
+    - gateway: {{ .Values.vip.gateway }}
+      rangeEnd: {{ .Values.vip.address }}
+      rangeStart: {{ .Values.vip.address }}
+      subnet: {{ .Values.vip.subnet }}
+  selector:
+    network: "{{ .Release.Namespace }}/{{ .Values.network_name }}"
+---
+apiVersion: loadbalancer.harvesterhci.io/v1beta1
+kind: LoadBalancer
+metadata:
+  name: "{{ .Values.cluster_name }}-lb"
+  namespace: {{ $.Release.Namespace }}
+spec:
+  healthCheck:
+    failureThreshold: 2
+    port: 6443
+    successThreshold: 3
+    timeoutSeconds: 5
+    periodSeconds: 5
+  ipam: pool
+  ipPool: "{{ .Values.cluster_name }}-pool"
+  listeners:
+    - name: k8s-api
+      port: 6443
+      protocol: TCP
+      backendPort: 6443
+    - name: ingress
+      port: 443
+      protocol: TCP
+      backendPort: 443
+    - name: join
+      port: 9345
+      protocol: TCP
+      backendPort: 9345
+  workloadType: vm
+  backendServerSelector:
+    harvesterhci.io/vmName:
+    {{- range $i := until (.Values.control_plane.node_count | int)}}
+    - {{ $.Values.cluster_name }}-cp-{{ $i }}
+    {{- end}}

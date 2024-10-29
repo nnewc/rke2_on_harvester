@@ -5,7 +5,6 @@ packages:
 - qemu-guest-agent
 password: superpassword
 chpasswd: { expire: False }
-ssh_pwauth: True
 runcmd:
 - - systemctl
   - enable
