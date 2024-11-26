@@ -75,7 +75,7 @@ spec:
   containers:    
     - name: keepalive
       image: busybox
-      command: ["/bin/sh", "-c", "sleep 60"]
+      command: ["/bin/sh", "-c", "sleep 3600"]
       volumeMounts:
       - name: results
         mountPath: /results

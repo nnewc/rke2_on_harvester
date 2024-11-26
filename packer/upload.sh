@@ -29,6 +29,6 @@ curl -sk -X POST -H "Authorization: Bearer ${TOKEN}"\
 # wait a bit for progress to catch up to etcd entry
 sleep 5
 
-if [[ $(kubectl get virtualmachineimage ubuntu-rke2 -o go-template='{{.status.progress}}') == "100" ]]; then echo "Image successfully uploaded";
-else echo "There was an error uploading the image: $(kubectl get virtualmachineimage ubuntu-rke2 -o go-template='{{.status}}')"
+if [[ $(kubectl get virtualmachineimage ${IMAGE_NAME} -o go-template='{{.status.progress}}') == "100" ]]; then echo "Image successfully uploaded";
+else echo "There was an error uploading the image: $(kubectl get virtualmachineimage ${IMAGE_NAME} -o go-template='{{.status}}')"
 fi
