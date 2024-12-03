@@ -4,3 +4,5 @@
 
 local.yaml
 .vscode/settings.json
+env.sh
+rke2.yaml
